@@ -10,18 +10,21 @@
                     <div class="col s12 input-field">
                         <input type="text" id="nombre" name="nombre" class="validate">
                         <label for="nombre">Nombre Del Producto</label>
+                        <strong class="red-text text-accent-3">{{ $errors -> first('nombre') }}</strong>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col s12 input-field ">
                         <textarea id="descripcion" name="descripcion" class="materialize-textarea"></textarea>
                         <label for="descripcion">Descripcion</label>
+                        <strong class="red-text text-accent-3">{{ $errors -> first('descripcion')}}</strong>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col s12 input-field ">
                         <input type="number" id="precio" name="precio" class="validate">
                         <label for="precio">Precio</label>
+                        <strong class="red-text text-accent-3">{{ $errors -> first('precio') }}</strong>
                     </div>
                 </div>
                 <div class="row">
@@ -32,6 +35,7 @@
                         </div>
                         <div class="file-path-wrapper">
                             <input class="file-path validate" type="text">
+                            <strong class="red-text text-accent-3">{{ $errors -> first('imagen') }}</strong>
                         </div>
                     </div>
                 </div>
@@ -44,6 +48,7 @@
                           @endforeach
                         </select>
                         <label>Seleccione la Marca</label>
+                        <strong class="red-text text-accent-3">{{ $errors -> first('marca') }}</strong>
                     </div>
                 </div>
                 <div class="row">
@@ -55,6 +60,7 @@
                           @endforeach
                         </select>
                         <label>Seleccione Categoria</label>
+                        <strong class="red-text text-accent-3">{{ $errors -> first('categoria') }}</strong>
                     </div>
                 </div>
                 <div class="row">

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Producto;
 use App\Models\Categoria;
 use App\Models\Marca;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 
 class ProductoController extends Controller
@@ -16,7 +17,8 @@ class ProductoController extends Controller
      */
     public function index()
     {
-        return 'hola';
+        $productos = Producto:: all();
+        return view('products/listaProductos') -> with("productos", $productos);
     }
 
     /**
@@ -40,30 +42,45 @@ class ProductoController extends Controller
      */
     public function store(Request $request)
     {
-        // echo "<pre>";
-        // var_dump($request->nombre);
-        // var_dump($request->descripcion);
-        // var_dump($request->precio);
-        // var_dump($request->imagen);
-        // echo "</pre>";
-
-        //Crear el objeto uploadedFile
-
-        $archivo=$request->imagen;
-        $nombre_archivo=$archivo->getClientOriginalName();
-        // Mover el arvhivo a la carpeta public
-        $ruta=public_path();
-        var_dump($ruta);
-        $archivo->move("$ruta/img/",$nombre_archivo);
-        // Registrar producto
-        $producto=new Producto();
-        $producto->nombre=$request->nombre;
-        $producto->descripcion=$request->descripcion;
-        $producto->precio=$request->precio;
-        $producto->imagen=$nombre_archivo;
-        $producto->marca_id=$request->marca;
-        $producto->categoria_id=$request->categoria;
-        $producto->save();
+        $reglas = [
+            "nombre" => 'required|alpha|unique:productos,nombre',
+            "descripcion" => 'required|min:10|max:100',
+            "precio" => 'required|numeric',
+            "imagen" => 'required|image',
+            "marca" => 'required',
+            "categoria" => 'required',
+        ];
+        // Objeto Validator
+        $v = Validator::make($request->all(), $reglas, $message = [
+            'required'=> 'El campo :attribute no debe estar vacio',
+            'min'=> 'El campo :attribute debe tener minimo :min caracteres',
+            'max'=> 'El campo :attribute debe tener maximo :max caracteres',
+            'image'=> 'El campo solo acepta imagenes',
+            'unique'=> 'El producto ya se encuentra registrado',
+        ]);
+        // Validator
+        if( $v -> fails() ){
+            return redirect('productos/create')
+            ->withErrors($v);
+        }
+        else{
+            //Crear el objeto uploadedFile
+            $archivo=$request->imagen;
+            $nombre_archivo=$archivo->getClientOriginalName();
+            // Mover el arvhivo a la carpeta public
+            $ruta=public_path();
+            $archivo->move("$ruta/img/",$nombre_archivo);
+            // Registrar producto
+            $producto=new Producto();
+            $producto->nombre=$request->nombre;
+            $producto->descripcion=$request->descripcion;
+            $producto->precio=$request->precio;
+            $producto->imagen=$nombre_archivo;
+            $producto->marca_id=$request->marca;
+            $producto->categoria_id=$request->categoria;
+            $producto->save();
+            return redirect('/productos');
+        }
     }
 
     /**

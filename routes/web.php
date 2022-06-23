@@ -25,9 +25,9 @@ Route::get('hola', function(){
 // Crear ruta de arreglos
 Route::get('arreglo',function(){
     $estudiantes=
-    [  
-       "AN" => "Ana", 
-        "JU" =>"Juana", 
+    [
+       "AN" => "Ana",
+        "JU" =>"Juana",
         "PA"=>"Paola"
     ];
     echo"<pre>";
